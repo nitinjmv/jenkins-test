@@ -1,0 +1,44 @@
+pipeline {
+    
+  agent any
+  
+  tools {
+      maven 'Maven'
+  }
+  
+  parameters{
+      string(name: 'VERSION', defaultValue: '1')
+      choice(name: 'VERSION', choices: ['1','2','3'])
+      booleanParam(name: 'executeTest', defaultValue: true)
+  }
+  stages{
+    stage("build"){
+      steps{
+        git 'https://github.com/nitinjmv/jenkins-jdk8/'
+        sh "mvn clean"
+        echo "${VERSION}"
+      }
+    }
+    stage("package"){
+    steps{
+      sh "mvn package"
+    }
+    }
+    stage("test"){
+        when {
+            expression{
+                params.executeTest == true
+            }
+        }
+    steps{
+      sh "mvn test"
+    }
+    }
+    stage("deploy"){
+    steps{
+      sh "mvn install"
+    }
+    }
+  }
+
+}
