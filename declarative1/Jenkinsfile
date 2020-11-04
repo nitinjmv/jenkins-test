@@ -1,29 +1,31 @@
 pipeline {
+    
   agent any
+  
+  tools {
+      maven 'Maven'
+  }
   
   stages{
     stage("build"){
       steps{
-        echo 'clean'
-        mvn clean
+        git 'https://github.com/nitinjmv/jenkins-jdk8/'
+        sh "mvn clean"
       }
     }
     stage("package"){
     steps{
-      echo 'testing'
-      mvn package
+      sh "mvn package"
     }
     }
     stage("test"){
     steps{
-      echo 'testing'
-      mvn test
+      sh "mvn test"
     }
     }
     stage("deploy"){
     steps{
-      echo 'install'
-      mvn install
+      sh "mvn install"
     }
     }
   }
