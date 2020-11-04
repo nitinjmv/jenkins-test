@@ -1,3 +1,4 @@
+def gv 
 pipeline {
     
   agent any
@@ -12,11 +13,21 @@ pipeline {
       booleanParam(name: 'executeTest', defaultValue: true)
   }
   stages{
+      stage('init'){
+          steps{
+              script{
+                  gv = load "script.groovy"
+              }
+          }
+          
+      }
     stage("build"){
       steps{
         git 'https://github.com/nitinjmv/jenkins-jdk8/'
         sh "mvn clean"
-        echo "${VERSION}"
+          script{
+              gv.buildApp()
+          }
       }
     }
     stage("package"){
