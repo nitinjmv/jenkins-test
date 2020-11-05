@@ -1,0 +1,43 @@
+pipeline {
+    
+  agent any
+  
+  tools {
+      maven 'Maven'
+  }
+  
+  stages{
+    stage("clean"){
+      steps{
+        git 'https://github.com/nitinjmv/jenkins-docker-test'
+        sh "mvn clean"
+      }
+    }
+    stage("validate"){
+    steps{
+      sh "mvn validate"
+    }
+    }
+    stage("test"){
+    steps{
+      sh "mvn test"
+    }
+    }
+    stage("package"){
+    steps{
+      sh "mvn package"
+    }
+    }
+    stage("install"){
+    steps{
+      sh "mvn install"
+    }
+    }
+    stage("deploy"){
+    steps{
+      sh "mvn deploy"
+    }
+    }
+  }
+
+}
