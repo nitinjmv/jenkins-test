@@ -1,0 +1,56 @@
+def gv
+def CODE_CHANGES
+
+pipeline {
+    agent any
+
+    stages {
+        stage('init'){
+            steps {
+                script{
+                    gv = load "script4.groovy"
+                    CODE_CHANGES = gv.getGitChanges()
+                }
+            }
+        }
+        stage('build') {
+            when {
+                expression {
+                    BRANCH_NAME = 'dev' && CODE_CHANGES == true
+                }
+            }
+            steps {
+                echo 'Build'
+            }
+        }
+        stage('test') {
+            when {
+                expression {
+                    BRANCH_NAME = 'dev'
+                }
+            }
+            steps {
+                echo 'test'
+            }
+        }
+        stage('deploy') {
+            steps {
+                echo 'Deploy'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'always'
+        }
+        
+        success {
+            echo 'success'
+        }
+        
+        failure {
+            echo 'failure'
+        }
+        
+    }
+}

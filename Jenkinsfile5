@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    
+    environment {
+      VERSION = '1.0.0'
+      DOCKER_HUB_CRED = credentials('dockerhub')
+    }
+
+    stages {
+        stage('build') {
+            steps {
+                echo "Building ${VERSION}"
+            }
+        }
+        stage('test') {
+            steps {
+                echo 'test'
+            }
+        }
+        stage('deploy') {
+            steps {
+                echo 'Deploy'
+                echo "pushing to dockerhub with: ${DOCKER_HUB_CRED}"
+            }
+        }
+    }
+    post {
+    always {
+      echo 'always runs regardless of the completion status of the Pipeline run'
+    }
+    success {
+      echo 'step will run only if the build is successful'
+    }
+    failure {
+      echo 'only when the Pipeline is currently in a "failed" state run, usually expressed in the Web UI with the red indicator.'
+    }
+    unstable {
+      echo 'current Pipeline has "unstable" state, usually by a failed test, code violations and other causes, in order to run. Usually represented in a web UI with a yellow indication.'
+    }
+    changed {
+      echo 'can only be run if the current Pipeline is running at a different state than the previously completed Pipeline'
+    }
+  }
+}
